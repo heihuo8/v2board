@@ -49,10 +49,10 @@ class PaymentService
 		if (isset($order['refer'])) {
 			$refererDomain = $order['refer'];
 			// 生成 return_url
-			$returnUrl = $refererDomain . '/#/order/' . $order['trade_no'];
+			$returnUrl = $refererDomain . '/#/payment?trade_no=' . $order['trade_no'];
 		} else {
 			// 如果 $order['refer'] 不存在，使用默认值
-			$returnUrl = config('v2board.app_url') . '/#/order/' . $order['trade_no'];
+			$returnUrl = config('v2board.app_url') . '/#/payment?trade_no=' . $order['trade_no'];
 		}
 
         return $this->payment->pay([
