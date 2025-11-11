@@ -18,7 +18,6 @@ class Shadowrocket
 
     public function handle()
     {
-        $servers = $this->servers;
         $user = $this->user;
 
         $uri = '';
@@ -31,7 +30,7 @@ class Shadowrocket
         $uri .= "STATUS=🚀已用流量:{$usedTraffic}GB,总流量:{$totalTraffic}GB💡到期时间:{$expiredDate}\r\n";
 
         foreach ($this->servers as $server) {
-            if ($server['type'] === 'vmess'){
+            if ($server['type'] === 'vmess' || ($server['type'] === 'v2node' && $server['protocol'] === 'vmess')) {
                 $uri .= self::buildVmess($user['uuid'], $server);
             } else {
                 $uri .= Helper::buildUri($this->user['uuid'], $server);
@@ -51,7 +50,7 @@ class Shadowrocket
         if ($server['tls']) {
             $config['tls'] = 1;
             $tlsSettings = $server['tls_settings'] ?? ($server['tlsSettings'] ?? []);
-            $config['allowInsecure'] = (int)$tlsSettings['allow_insecure'] ?? ((int)$tlsSettings['allowInsecure'] ?? 0);
+            $config['allowInsecure'] = (int)($tlsSettings['allow_insecure'] ?? $tlsSettings['allowInsecure'] ?? 0);
             $config['peer'] = $tlsSettings['server_name'] ?? $tlsSettings['serverName'] ?? '';
         }
         if ($server['network'] === 'tcp') {
